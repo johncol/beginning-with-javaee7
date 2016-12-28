@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class Book {
 
     @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotNull
     private String title;
