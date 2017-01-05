@@ -6,17 +6,32 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Entity
+@NamedQueries({
+    @NamedQuery(name = Customer.FIND_ALL_QUERY, query = "SELECT c FROM Customer c"),
+    @NamedQuery(name = Customer.FIND_BY_NAME_QUERY, query = "SELECT c FROM Customer c WHERE c.name = :name")
+})
 public class Customer {
+    
+    public final static String FIND_ALL_QUERY = "customer_find_all";
+    public final static String FIND_BY_NAME_QUERY = "customer_find_by_name";
 
     @Id
     @GeneratedValue
     private Long id;
+    
+    @Version
+    private Integer version;
 
     @NotNull
     @Column(nullable = false)
@@ -56,6 +71,14 @@ public class Customer {
 
     public void setAddress(Address address) {
 	this.address = address;
+    }
+    
+    @PrePersist
+    @PreUpdate
+    public void validateNameContent() {
+	if (name == null || name.trim().length() == 0) {
+	    throw new IllegalArgumentException("Name cannot be empty");
+	}
     }
 
     @Override

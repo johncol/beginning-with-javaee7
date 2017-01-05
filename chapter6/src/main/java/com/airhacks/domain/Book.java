@@ -1,14 +1,20 @@
 package com.airhacks.domain;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.airhacks.domain.listeners.BookListener;
+
 @Entity
+@Cacheable(true)
+@EntityListeners({ BookListener.class })
 public class Book {
 
     @Id
